@@ -47,3 +47,28 @@ cursor.execute("INSERT INTO prontuarios (paciente_id, descricao, data) VALUES(?,
 conexao.commit()
 print("Prontuário cadastrado com sucesso!")
 
+def menu():
+   while True:
+    print ("\nMenu:")
+    print ("1. Cadastrar Paciente")
+    print ("2. Listar Paciente")
+    print ("3. Cadastrar Prontuário")
+    print ("4. Listar Prontuário")
+    print ("5. Sair")
+    opcao = input("Escolha uma opção:")
+
+if opcao == '1':
+   cadastrar_paciente()
+elif opcao == '2':
+   listar_paciente()
+elif opcao == '3':
+   cadastrar prontuario()
+elif opcao == '4':
+    listar_prontuario()
+elif opcao == '5':
+    print ("Saindo...")
+    break 
+  else:
+     print ("Opção inválida, tente novamente.")
+
+     
