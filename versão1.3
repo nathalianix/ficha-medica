@@ -27,7 +27,7 @@ def adicionar_paciente():
     queixa_principal = input("Queixa principal: ")
     historico_clinico = input("Histórico clínico (opcional): ")
 
-cursor.execute ("INSERT INTO pacientes (nome, data_nascimento, sexo, queixa_principal, historico_clinico)VALEUS (??????),"(nome, data_nascimento, sexo, queixa_principal, historico_clinico) )  
+cursor.execute ("INSERT INTO pacientes (nome, data_nascimento, sexo, queixa_principal, historico_clinico)VALEUS ('?', '?', '?', '?', '?', '?'),"(nome, data_nascimento, sexo, queixa_principal, historico_clinico) )  
 conexao.commit()
 print ("Paciente cadastrado com sucesso!")
 
@@ -43,7 +43,7 @@ paciente_id= int(input("Digite o ID do paciente: "))
 descricao = input("Digite a descricao do prontuário: ")
 data = input("Digite a data do prontuário(YYYY-MM-DD):")
 
-cursor.execute("INSERT INTO prontuarios (paciente_id, descricao, data) VALUES(?,?,?"), (paciente_id, descricao, data))
+cursor.execute("INSERT INTO prontuarios (paciente_id, descricao, data) VALUES('?', '?', '?'), (paciente_id, descricao, data))
 conexao.commit()
 print("Prontuário cadastrado com sucesso!")
 
