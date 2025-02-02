@@ -5,7 +5,7 @@ def criar_banco_e_tabelas():
     cursor = conexao.cursor()
 
     # Criação da tabela de pacientes
-    cursor.execute('''
+    cursor.execute('''  
     CREATE TABLE IF NOT EXISTS pacientes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL,
@@ -43,6 +43,9 @@ def adicionar_paciente():
         queixa_principal = input("Queixa principal: ") or "Nenhuma"
         historico_clinico = input("Histórico clínico (opcional): ") or "Nenhum"
 
+        # Print para depuração
+        print(f"Inserindo paciente: {nome}, {data_nascimento}, {sexo}, {contato}, {queixa_principal}, {historico_clinico}")
+
         cursor.execute("INSERT INTO pacientes (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico) VALUES (?, ?, ?, ?, ?, ?)", 
                        (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico))
         conexao.commit()
@@ -59,6 +62,9 @@ def listar_pacientes():
     try:
         cursor.execute("SELECT * FROM pacientes")
         pacientes = cursor.fetchall()
+
+        # Print para depuração
+        print(f"Pacientes encontrados: {pacientes}")
 
         if not pacientes:
             print("Nenhum paciente encontrado.")
@@ -86,6 +92,8 @@ def cadastrar_prontuario():
 
         descricao = input("Digite a descrição do prontuário: ") or "Descrição de teste"
         data = input("Digite a data do prontuário (YYYY-MM-DD): ") or "2023-01-01"
+
+        print(f"Inserindo prontuário para o paciente ID {paciente_id}, Descrição: {descricao}, Data: {data}")
 
         cursor.execute("INSERT INTO prontuarios (paciente_id, descricao, data) VALUES (?, ?, ?)", (paciente_id, descricao, data))
         conexao.commit()
