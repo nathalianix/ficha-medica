@@ -8,34 +8,42 @@ def criar_banco_e_tabelas():
     conexao = sqlite3.connect("prontuario_clinica_medica.db")
     cursor = conexao.cursor()
 
-    cursor.execute(''''''''
-                   crie uma tabela de pacientes,
-                   id integer primary key autoincrement,
-                   nome  TEXT NOT NULL,
-                   data_nascimento INTEGE NOT NULL,
-                   sexo TEXT CHECK("sexo IN ('M', 'F', 'Outro')") NOT NULL,
-                   contato TEXT NOT NULL,
-                   queixa_principal TEXT NOT NULL,
-                   historico_clinico TEXT,
-                   '''''''')
+   cursor.execute('''
+CREATE TABLE IF NOT EXISTS pacientes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    data_nascimento TEXT NOT NULL,
+    sexo TEXT CHECK(sexo IN ('M', 'F', 'Outro')) NOT NULL,
+    contato TEXT NOT NULL,
+    queixa_principal TEXT NOT NULL,
+    historico_clinico TEXT
+)
+''')
 
 
 def adicionar_paciente():
     nome = input("Nome do paciente: ")
     data_nascimento = input("Data de nascimento {YYYY-MM-DD}: ")
     sexo = input("Sexo (M, F, Outro): ")
+    contato = input("Contato: ")
     queixa_principal = input("Queixa principal: ")
     historico_clinico = input("Histórico clínico (opcional): ")
 
-cursor.execute ("INSERT INTO pacientes (nome, data_nascimento, sexo, queixa_principal, historico_clinico)VALEUS ('?', '?', '?', '?', '?', '?'),"(nome, data_nascimento, sexo, queixa_principal, historico_clinico) )  
+    cursor.execute("INSERT INTO pacientes (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico) VALUES (?, ?, ?, ?, ?, ?)", 
+                   (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico))
+    conexao.commit()
+    print("Paciente cadastrado com sucesso!")
+
+
+cursor.execute("INSERT INTO pacientes (nome, data_nascimento, sexo, queixa_principal, historico_clinico) VALUES (?, ?, ?, ?, ?)", (nome, data_nascimento, sexo, queixa_principal, historico_clinico))
 conexao.commit()
-print ("Paciente cadastrado com sucesso!")
+     print ("Paciente cadastrado com sucesso!")
 
 def listar_pacientes():
 cursos.execute("SELECT * FROM pacientes")
 pacientes = cursor. fetchall()
 for paciente in pacientes:
-print(f" ID: {paceinte[0]}, Nome: {paciente[1]}, data_nascimento: {paciente[2]}, sexo: {paciente[3]}, contato: {paciente[4]}, queixa_principal: {paciente[5]}, historico_clinico: {paciente[6]}")
+    print(f" ID: {paciente[0]}, Nome: {paciente[1]}, data_nascimento: {paciente[2]}, sexo: {paciente[3]}, contato: {paciente[4]}, queixa_principal: {paciente[5]}, historico_clinico: {paciente[6]}")
 
 def cadastrar_prontuario():
 listar_pacientes()
@@ -43,32 +51,27 @@ paciente_id= int(input("Digite o ID do paciente: "))
 descricao = input("Digite a descricao do prontuário: ")
 data = input("Digite a data do prontuário(YYYY-MM-DD):")
 
-cursor.execute("INSERT INTO prontuarios (paciente_id, descricao, data) VALUES('?', '?', '?'), (paciente_id, descricao, data))
+cursor.execute("INSERT INTO prontuarios (paciente_id, descricao, data) VALUES (?, ?, ?)", (paciente_id, descricao, data))
 conexao.commit()
-print("Prontuário cadastrado com sucesso!")
+    print("Prontuário cadastrado com sucesso!")
 
 def menu():
-   while True:
-    print ("\nMenu:")
-    print ("1. Cadastrar Paciente")
-    print ("2. Listar Paciente")
-    print ("3. Cadastrar Prontuário")
-    print ("4. Listar Prontuário")
-    print ("5. Sair")
-    opcao = input("Escolha uma opção:")
+    while True:
+        print("\nMenu:")
+        print("1. Cadastrar Paciente")
+        print("2. Listar Pacientes")
+        print("3. Cadastrar Prontuário")
+        print("4. Sair")
+        opcao = input("Escolha uma opção: ")
 
-if opcao == '1':
-   cadastrar_paciente()
-elif opcao == '2':
-   listar_paciente()
-elif opcao == '3':
-   cadastrar prontuario()
-elif opcao == '4':
-    listar_prontuario()
-elif opcao == '5':
-    print ("Saindo...")
-    break 
-  else:
-     print ("Opção inválida, tente novamente.")
-
-     
+        if opcao == '1':
+            adicionar_paciente()
+        elif opcao == '2':
+            listar_pacientes()
+        elif opcao == '3':
+            cadastrar_prontuario()
+        elif opcao == '4':
+            print("Saindo...")
+            break
+        else:
+            print("Opção inválida, tente novamente.")
