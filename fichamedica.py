@@ -4,7 +4,7 @@ def criar_banco_e_tabelas():
     conexao = sqlite3.connect("prontuario_clinica_medica.db")
     cursor = conexao.cursor()
 
-    # Criação da tabela de pacientes
+    
     cursor.execute('''  
     CREATE TABLE IF NOT EXISTS pacientes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,7 +17,7 @@ def criar_banco_e_tabelas():
     )
     ''')
 
-    # Criação da tabela de prontuários
+   
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS prontuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,7 +43,7 @@ def adicionar_paciente():
         queixa_principal = input("Queixa principal: ") or "Nenhuma"
         historico_clinico = input("Histórico clínico (opcional): ") or "Nenhum"
 
-        # Print para depuração
+       
         print(f"Inserindo paciente: {nome}, {data_nascimento}, {sexo}, {contato}, {queixa_principal}, {historico_clinico}")
 
         cursor.execute("INSERT INTO pacientes (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico) VALUES (?, ?, ?, ?, ?, ?)", 
@@ -63,7 +63,7 @@ def listar_pacientes():
         cursor.execute("SELECT * FROM pacientes")
         pacientes = cursor.fetchall()
 
-        # Print para depuração
+        
         print(f"Pacientes encontrados: {pacientes}")
 
         if not pacientes:
