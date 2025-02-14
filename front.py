@@ -2,11 +2,13 @@ import sqlite3
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 
 def criar_banco():
     with sqlite3.connect("prontuario_clinica_medica.db") as conexao:
         cursor = conexao.cursor()
-        cursor.execute('''
+        cursor.execute(''' 
             CREATE TABLE IF NOT EXISTS pacientes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL,
@@ -42,7 +44,7 @@ def adicionar_paciente():
 
     with sqlite3.connect("prontuario_clinica_medica.db") as conexao:
         cursor = conexao.cursor()
-        cursor.execute("INSERT INTO pacientes (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico) VALUES (?, ?, ?, ?, ?, ?)", 
+        cursor.execute("INSERT INTO pacientes (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico) VALUES (?, ?, ?, ?, ?, ?)",
                        (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico))
         conexao.commit()
 
@@ -59,39 +61,41 @@ def listar_pacientes():
         for paciente in cursor.fetchall():
             tree.insert("", "end", values=paciente)
 
-root = tk.Tk()
-root.title("Cadastro de Pacientes")
-root.geometry("600x500")
+app = ttk.Window(title="Prontuário Médico", themename="morph")
+app.geometry("600x500")
 
-tk.Label(root, text="Nome:").grid(row=0, column=0, padx=10, pady=5, sticky="w")
-entry_nome = tk.Entry(root)
+frame = ttk.Frame(app, padding=20)
+frame.pack(expand=True)
+
+tk.Label(frame, text="Nome:").grid(row=0, column=0, padx=10, pady=5, sticky="w")
+entry_nome = ttk.Entry(frame, width=40)
 entry_nome.grid(row=0, column=1, padx=10, pady=5, sticky="w")
 
-tk.Label(root, text="Data de Nascimento (YYYY-MM-DD):").grid(row=1, column=0, padx=10, pady=5, sticky="w")
-entry_data = tk.Entry(root)
+tk.Label(frame, text="Data de Nascimento (YYYY-MM-DD):").grid(row=1, column=0, padx=10, pady=5, sticky="w")
+entry_data = ttk.Entry(frame, width=40)
 entry_data.grid(row=1, column=1, padx=10, pady=5, sticky="w")
 
-tk.Label(root, text="Sexo:").grid(row=2, column=0, padx=10, pady=5, sticky="w")
-combo_sexo = ttk.Combobox(root, values=["M", "F", "Outro"])
+tk.Label(frame, text="Sexo:").grid(row=2, column=0, padx=10, pady=5, sticky="w")
+combo_sexo = ttk.Combobox(frame, values=["M", "F", "Outro"])
 combo_sexo.grid(row=2, column=1, padx=10, pady=5, sticky="w")
 combo_sexo.current(0)
 
-tk.Label(root, text="Contato:").grid(row=3, column=0, padx=10, pady=5, sticky="w")
-entry_contato = tk.Entry(root)
+tk.Label(frame, text="Contato:").grid(row=3, column=0, padx=10, pady=5, sticky="w")
+entry_contato = ttk.Entry(frame, width=40)
 entry_contato.grid(row=3, column=1, padx=10, pady=5, sticky="w")
 
-tk.Label(root, text="Queixa Principal:").grid(row=4, column=0, padx=10, pady=5, sticky="w")
-entry_queixa = tk.Entry(root)
+tk.Label(frame, text="Queixa Principal:").grid(row=4, column=0, padx=10, pady=5, sticky="w")
+entry_queixa = ttk.Entry(frame, width=40)
 entry_queixa.grid(row=4, column=1, padx=10, pady=5, sticky="w")
 
-tk.Label(root, text="Histórico Clínico:").grid(row=5, column=0, padx=10, pady=5, sticky="w")
-entry_historico = tk.Entry(root)
+tk.Label(frame, text="Histórico Clínico:").grid(row=5, column=0, padx=10, pady=5, sticky="w")
+entry_historico = ttk.Entry(frame, width=40)
 entry_historico.grid(row=5, column=1, padx=10, pady=5, sticky="w")
 
-btn_adicionar = tk.Button(root, text="Cadastrar Paciente", command=adicionar_paciente)
+btn_adicionar = ttk.Button(frame, text="Cadastrar Paciente", bootstyle="success", command=adicionar_paciente)
 btn_adicionar.grid(row=6, column=0, columnspan=2, pady=10)
 
-tree = ttk.Treeview(root, columns=("ID", "Nome", "Nascimento", "Sexo"), show="headings")
+tree = ttk.Treeview(frame, columns=("ID", "Nome", "Nascimento", "Sexo"), show="headings")
 tree.heading("ID", text="ID")
 tree.heading("Nome", text="Nome")
 tree.heading("Nascimento", text="Nascimento")
@@ -101,4 +105,4 @@ tree.grid(row=7, column=0, columnspan=2, pady=10)
 criar_banco()
 listar_pacientes()
 
-root.mainloop()
+app.mainloop()
