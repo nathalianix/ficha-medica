@@ -5,6 +5,7 @@ from tkinter import ttk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
+
 def criar_banco():
     with sqlite3.connect("prontuario_clinica_medica.db") as conexao:
         cursor = conexao.cursor()
@@ -19,7 +20,7 @@ def criar_banco():
                 historico_clinico TEXT
             )
         ''')
-        cursor.execute('''
+        cursor.execute(''' 
             CREATE TABLE IF NOT EXISTS prontuarios (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 paciente_id INTEGER NOT NULL,
@@ -29,6 +30,17 @@ def criar_banco():
             )
         ''')
     print("Banco de dados criado!")
+
+
+def excluir_paciente(paciente_id):
+    with sqlite3.connect("prontuario_clinica_medica.db") as conexao:
+        cursor = conexao.cursor()
+        cursor.execute("DELETE FROM pacientes WHERE id = ?", (paciente_id,))
+        conexao.commit()
+
+    messagebox.showinfo("Sucesso", "Paciente excluído com sucesso!")
+    listar_pacientes() 
+
 
 def adicionar_paciente():
     nome = entry_nome.get().strip()
@@ -44,22 +56,35 @@ def adicionar_paciente():
 
     with sqlite3.connect("prontuario_clinica_medica.db") as conexao:
         cursor = conexao.cursor()
-        cursor.execute("INSERT INTO pacientes (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico) VALUES (?, ?, ?, ?, ?, ?)",
-                       (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico))
+        cursor.execute(
+            "INSERT INTO pacientes (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico) VALUES (?, ?, ?, ?, ?, ?)",
+            (nome, data_nascimento, sexo, contato, queixa_principal, historico_clinico))
         conexao.commit()
 
     messagebox.showinfo("Sucesso", "Paciente cadastrado com sucesso!")
     listar_pacientes()
 
+
 def listar_pacientes():
     for row in tree.get_children():
         tree.delete(row)
+
+    for btn in botao_exclusao:
+        btn.grid_forget()
+
+    botao_exclusao.clear() 
 
     with sqlite3.connect("prontuario_clinica_medica.db") as conexao:
         cursor = conexao.cursor()
         cursor.execute("SELECT id, nome, data_nascimento, sexo FROM pacientes")
         for paciente in cursor.fetchall():
-            tree.insert("", "end", values=paciente)
+            item_id = tree.insert("", "end", values=(paciente[0], paciente[1], paciente[2], paciente[3]))
+
+            btn_delete = ttk.Button(frame, text="🗑️", bootstyle="danger",
+                                    command=lambda paciente_id=paciente[0]: excluir_paciente(paciente_id))
+            btn_delete.grid(row=len(botao_exclusao) + 8, column=0, padx=10, pady=5)
+            botao_exclusao.append(btn_delete)
+
 
 app = ttk.Window(title="Prontuário Médico", themename="morph")
 app.geometry("600x500")
@@ -101,6 +126,8 @@ tree.heading("Nome", text="Nome")
 tree.heading("Nascimento", text="Nascimento")
 tree.heading("Sexo", text="Sexo")
 tree.grid(row=7, column=0, columnspan=2, pady=10)
+
+botao_exclusao = []
 
 criar_banco()
 listar_pacientes()
