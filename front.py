@@ -110,4 +110,10 @@ criar_banco()
 listar_pacientes()
 
 # Rodar aplicação
+
+import tkinter as tk
+
+root = tk.Tk()
+root.configure(bg="lightblue")
+root.mainloop()
 root.mainloop()
