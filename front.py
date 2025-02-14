@@ -102,4 +102,3 @@ criar_banco()
 listar_pacientes()
 
 root.mainloop()
-root.mainloop()
